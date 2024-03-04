@@ -27,9 +27,9 @@ def read_arithmetic_file(file_name):
     """
     try:
         with open(file_name, 'r') as file:
-            contents = file.read()
-            print(f"Content of {file_name}: {contents}")
-            return contents
+            lines = file.readlines()  # Read and return lines
+            print(f"Content of {file_name}:\n{''.join(lines)}")
+            return lines
     except FileNotFoundError:
         return "File not found."
     
@@ -402,6 +402,8 @@ def evaluate_postfix(postfix, variables):
                 raise ValueError(f"Invalid assignment target: {variable_lexeme}")
             # Update the variables dictionary
             variables[variable_lexeme.value] = value_lexeme.value
+            # Update the variable type
+            variable_lexeme.variable_type = value_lexeme.token_type
             # Push the assignment result back to stack if needed
             stack.append(value_lexeme)
         else:
@@ -479,10 +481,29 @@ if __name__ == "__main__":
     #file_name = "arithmetic.txt"
     # file_name = "stringTest.txt"
     file_name = "testing.txt"
-    content = read_arithmetic_file(file_name)
-    tokens = tokenize_arithmetic(content)
-    print(f"Tokens: {tokens}")
-    postfix = shunting_yard(tokens, variables)
-    print(f"Postfix: {' '.join(repr(lexeme) for lexeme in postfix)}")
-    result = evaluate_postfix(postfix, variables)
-    print(f"\nResult: {result}\n")
+
+    lines = read_arithmetic_file(file_name)
+    for line in lines:
+        print(f"Line: {line}")
+        tokens = tokenize_arithmetic(line.strip())  # Ensure to strip newline characters
+        if tokens:  # Check if line is not empty
+            print(f"Tokens: {tokens}")
+            postfix = shunting_yard(tokens, variables)
+            print(f"Postfix: {' '.join(repr(lexeme) for lexeme in postfix)}")
+            result = evaluate_postfix(postfix, variables)
+            print(f"Variables: {variables}")
+            print(f"Result: {result}\n")
+
+
+
+
+
+    # content = read_arithmetic_file(file_name)
+    # tokens = tokenize_arithmetic(content)
+    # print(f"Tokens: {tokens}")
+    # postfix = shunting_yard(tokens, variables)
+    # print(f"Postfix: {' '.join(repr(lexeme) for lexeme in postfix)}")
+    # result = evaluate_postfix(postfix, variables)
+    # # Print out the variables dictionary
+    # print(f"Variables: {variables}")
+    # print(f"\nResult: {result}\n")
