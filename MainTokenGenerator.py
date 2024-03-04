@@ -35,6 +35,20 @@ def read_arithmetic_file(file_name):
     
 
 def tokenize_arithmetic(content):
+    """
+    Tokenize arithmetic expressions.
+
+    This function takes a string of arithmetic content and breaks it down into a list of Lexeme objects.
+    Each Lexeme object represents a token in the content.
+
+    Parameters:
+        content (str): The arithmetic content to tokenize.
+
+    Returns:
+        list: A list of Lexeme objects representing the tokens in the content.
+
+    """
+
     tokens = []
     num = ''
     line = 1  # Example line number handling; you'll need to adjust this based on actual content lines
@@ -76,6 +90,14 @@ def tokenize_arithmetic(content):
             tokens.append(Lexeme(line, 'boolean', token))
             i += len(token) - 1  # Adjust index based on token length
 
+        # New handling for identifiers and assignments
+        if char.isalpha():  # Simple check for variable name (identifier) start
+            start = i
+            while i + 1 < len(content) and (content[i + 1].isalnum() or content[i + 1] == '_'):
+                i += 1
+            identifier = content[start:i+1]
+            tokens.append(Lexeme(line, 'identifier', identifier))
+
         i += 1
 
     if num:  # If there's a number left at the end
@@ -88,41 +110,96 @@ def tokenize_arithmetic(content):
 # IF I FIND VARIABLE NAME, REPLACE IT WITH THE VALUE
 # IF I FIND A VARIABLE NAME, AND IT IS NOT IN THE DICTIONARY, THROW AN ERROR
 # ADD FOR RIGHT HAND SIDE AND LEFT HAND SIDE
-class Variable:
-    # Use this when implementing variables
-    def __init__(self, name, variable_type, value):
-        self.name = name
-        self.variable_type = variable_type
-        self.value = value
+# class Variable:
+#     # Use this when implementing variables
+#     def __init__(self, name, variable_type, value):
+#         self.name = name
+#         self.variable_type = variable_type
+#         self.value = value
 
-    def __repr__(self):
-        return f"Variable(name='{self.name}', variable_type='{self.variable_type}' ,value={self.value})"
+#     def __repr__(self):
+#         return f"Variable(name='{self.name}', variable_type='{self.variable_type}' ,value={self.value})"
 
 
+# class Lexeme:
+#     def __init__(self, line, token_type, value):
+#         self.line = line
+#         self.token_type = token_type
+#         self.value = value
+
+#     def __repr__(self):
+#         return f"Lexeme(line={self.line}, token_type='{self.token_type}', value='{self.value}')"
+    
 class Lexeme:
-    def __init__(self, line, token_type, value):
+    def __init__(self, line, token_type, value, name=None, variable_type=None):
         self.line = line
         self.token_type = token_type
         self.value = value
+        self.name = name
+        self.variable_type = variable_type
 
     def __repr__(self):
-        return f"Lexeme(line={self.line}, token_type='{self.token_type}', value='{self.value}')"
+        return f"Lexeme(line={self.line}, token_type='{self.token_type}', value={self.value}, name='{self.name}', variable_type='{self.variable_type}')"
 
 
-def shunting_yard(tokens):
+# Dictionary to store the variables
+variables = {}
+
+# def shunting_yard(tokens):
+#     """
+#     Tokenize arithmetic expressions.
+
+#     This function takes a string of arithmetic content and breaks it down into a list of Lexeme objects.
+#     Each Lexeme object represents a token in the content.
+
+#     Parameters:
+#         content (str): The arithmetic content to tokenize.
+
+#     Returns:
+#         list: A list of Lexeme objects representing the tokens in the content.
+
+#     """
+
+#     output_queue = []
+#     operator_stack = []
+
+#     precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '<=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1}
+#     associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '<=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L'}
+
+
+#     for lexeme in tokens:
+#         token = lexeme.value  # Use the value of the Lexeme object
+#         # if token.replace('.', '', 1).isdigit() or token in ['TRUE', 'FALSE', '"']:  # Check if the token is a digit, TRUE, FALSE, or a string
+#         #     output_queue.append(lexeme)  # Append the Lexeme object directly
+#         if lexeme.token_type in ['int', 'float', 'boolean', 'string']:
+#             output_queue.append(lexeme)  # Append the Lexeme object directly
+#         elif token in precedence:
+#             while operator_stack and operator_stack[-1].value != '(' and (
+#                 (associativity[token] == 'L' and precedence[token] <= precedence[operator_stack[-1].value]) or
+#                 (associativity[token] == 'R' and precedence[token] < precedence[operator_stack[-1].value])
+#             ):
+#                 output_queue.append(operator_stack.pop())
+#             operator_stack.append(lexeme)
+#         elif token == '(':
+#             operator_stack.append(lexeme)
+#         elif token == ')':
+#             while operator_stack and operator_stack[-1].value != '(':
+#                 output_queue.append(operator_stack.pop())
+#             operator_stack.pop()  # Remove '('
+#     while operator_stack:
+#         output_queue.append(operator_stack.pop())
+    
+#     return output_queue
+def shunting_yard(tokens, variables):
     output_queue = []
     operator_stack = []
-
-    precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '<=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1}
-    associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '<=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L'}
-
+    precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1, '=': -2}
+    associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L', '=': 'R'}
 
     for lexeme in tokens:
-        token = lexeme.value  # Use the value of the Lexeme object
-        # if token.replace('.', '', 1).isdigit() or token in ['TRUE', 'FALSE', '"']:  # Check if the token is a digit, TRUE, FALSE, or a string
-        #     output_queue.append(lexeme)  # Append the Lexeme object directly
-        if lexeme.token_type in ['int', 'float', 'boolean', 'string']:
-            output_queue.append(lexeme)  # Append the Lexeme object directly
+        token = lexeme.value
+        if lexeme.token_type in ['int', 'float', 'boolean', 'string', 'identifier']:
+            output_queue.append(lexeme)
         elif token in precedence:
             while operator_stack and operator_stack[-1].value != '(' and (
                 (associativity[token] == 'L' and precedence[token] <= precedence[operator_stack[-1].value]) or
@@ -135,15 +212,17 @@ def shunting_yard(tokens):
         elif token == ')':
             while operator_stack and operator_stack[-1].value != '(':
                 output_queue.append(operator_stack.pop())
-            operator_stack.pop()  # Remove '('
+            operator_stack.pop()
+
     while operator_stack:
         output_queue.append(operator_stack.pop())
-    
+
     return output_queue
 
 
 
-def evaluate_postfix(postfix):
+
+def evaluate_postfix(postfix, variables):
     stack = []
     for lexeme in postfix:
         token = lexeme.value  # Extract the value for comparison and operation
@@ -290,7 +369,13 @@ def evaluate_postfix(postfix):
             elif token == '|':
                 if lhv.token_type == 'boolean' and rhv.token_type == 'boolean':
                     # NOTE: False | True is = to False - NOT SURE WHY?!
-                    stack.append(Lexeme(lhv.line, 'boolean', lhv.value or rhv.value))
+                    BLHV = BRHV = False
+                    if lhv.value == "TRUE":
+                        BLHV = True
+                    if rhv.value == "TRUE":
+                        BRHV = True
+
+                    stack.append(Lexeme(lhv.line, 'boolean', str(BLHV or BRHV)))
                 else:
                     raise ValueError("Invalid operands for the OR operator.")
 
@@ -300,8 +385,30 @@ def evaluate_postfix(postfix):
                 raise ValueError("Insufficient values in the expression for unary operation.")
             val = stack.pop()
             stack.append(Lexeme(val.line, 'boolean', not val.value))
+
+        elif lexeme.token_type == 'identifier':
+            # Push variable value if exists, else push variable name for later assignment
+            if token in variables:
+                stack.append(Lexeme(lexeme.line, 'variable', variables[token], name=token))
+            else:
+                stack.append(Lexeme(lexeme.line, 'identifier', token, name=token))
+        elif token == '=':
+            # Handle assignment
+            if len(stack) < 2:
+                raise ValueError("Insufficient values for assignment.")
+            value_lexeme = stack.pop()
+            variable_lexeme = stack.pop()
+            if variable_lexeme.token_type != 'identifier':
+                raise ValueError(f"Invalid assignment target: {variable_lexeme}")
+            # Update the variables dictionary
+            variables[variable_lexeme.value] = value_lexeme.value
+            # Push the assignment result back to stack if needed
+            stack.append(value_lexeme)
         else:
             raise ValueError(f"Unknown token: {lexeme}")
+        
+        
+
     if len(stack) != 1:
         raise ValueError("The expression is invalid.")
     return stack[0].value
@@ -375,7 +482,7 @@ if __name__ == "__main__":
     content = read_arithmetic_file(file_name)
     tokens = tokenize_arithmetic(content)
     print(f"Tokens: {tokens}")
-    postfix = shunting_yard(tokens)
+    postfix = shunting_yard(tokens, variables)
     print(f"Postfix: {' '.join(repr(lexeme) for lexeme in postfix)}")
-    result = evaluate_postfix(postfix)
+    result = evaluate_postfix(postfix, variables)
     print(f"\nResult: {result}\n")
