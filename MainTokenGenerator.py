@@ -72,13 +72,9 @@ def tokenize_arithmetic(content):
             tokens.append(Lexeme(line, 'operator', token))
 
         elif content[i:i+4].upper() == 'TRUE' or content[i:i+5].upper() == 'FALSE':
-            token = content[i:i+4] if content[i:i+4].upper() == 'TRUE' else content[i:i+5]
+            token = content[i:i+4].upper() if content[i:i+4].upper() == 'TRUE' else content[i:i+5].upper()
             tokens.append(Lexeme(line, 'boolean', token))
             i += len(token) - 1  # Adjust index based on token length
-        # elif content[i:i+4].upper() == 'TRUE' or content[i:i+5].upper() == 'FALSE':
-        #     token_value = content[i:i+4].upper() if content[i:i+4].upper() == 'TRUE' else content[i:i+5].upper()
-        #     tokens.append(Lexeme(line, 'boolean', token))
-        #     i += len(token_value) - 1
 
         i += 1
 
@@ -116,9 +112,10 @@ class Lexeme:
 def shunting_yard(tokens):
     output_queue = []
     operator_stack = []
-    # Updated precedence to reflect correct handling, especially for '>=', '==', and '!'
-    precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '==': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1}
-    associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '==': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L'}
+
+    precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '<=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1}
+    associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '<=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L'}
+
 
     for lexeme in tokens:
         token = lexeme.value  # Use the value of the Lexeme object
@@ -176,6 +173,7 @@ def evaluate_postfix(postfix):
                     lhv.value = lhv.value.strip('"')
                     rhv.value = rhv.value.strip('"')
                     concatenateed = '"' + lhv.value + rhv.value + '"'
+                    # Append the concatenated string to the stack
                     stack.append(Lexeme(lhv.line, 'string', concatenateed))
                 elif lhv.token_type == 'int' and rhv.token_type == 'int':
                     # Integer addition
@@ -183,33 +181,27 @@ def evaluate_postfix(postfix):
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     # Float addition
                     stack.append(Lexeme(lhv.line, 'float', float(lhv.value) + float(rhv.value)))
-                elif (lhv.token_type == "boolean" and rhv.token_type=="boolean"):
-                    # Throw an error
-                    # raise ValueError(f"Invalid operands for the + operator: {lhv} and {rhv}")
-                    pass # decide how to handle string and other type additions
                 else:
                     raise ValueError(f"Invalid operands for the + operator: {lhv} and {rhv}")
                 
 
             elif token == '-':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
+                    # Integer subtraction
                     stack.append(Lexeme(lhv.line, 'int', int(lhv.value) - int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
+                    # Float subtraction
                     stack.append(Lexeme(lhv.line, 'float', float(lhv.value) - float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":        
-                    pass # decide how to handle string and other type additions 
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":        
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the - operator: {lhv} and {rhv}")
 
             elif token == '*':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
                     stack.append(Lexeme(lhv.line, 'int', int(lhv.value) * int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     stack.append(Lexeme(lhv.line, 'float', float(lhv.value) * float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":        
-                    pass # decide how to handle string and other type additions
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the * operator: {lhv} and {rhv}")
 
             elif token == '/':
                 if rhv == 0:
@@ -218,24 +210,20 @@ def evaluate_postfix(postfix):
                     stack.append(Lexeme(lhv.line, 'int', int(lhv.value) / int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     stack.append(Lexeme(lhv.line, 'float', float(lhv.value) / float(rhv.value)))
-                elif lhv.token_type == "int" or rhv.token_type=="float" or lhv.token_type == "float" or rhv.token_type=="int":
+                elif (lhv.token_type == "int" and rhv.token_type=="float") or (lhv.token_type == "float" and rhv.token_type=="int"):
                     stack.append(Lexeme(lhv.line, 'float', float(lhv.value) / float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":
-                    pass # decide how to handle string and other type additions
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the / operator: {lhv} and {rhv}")
 
             elif token == '>=':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
                     stack.append(Lexeme(lhv.line, 'boolean', int(lhv.value) >= int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) >= float(rhv.value)))
-                elif lhv.token_type == "int" or rhv.token_type=="float" or lhv.token_type == "float" or rhv.token_type=="int":
+                elif (lhv.token_type == "int" and rhv.token_type=="float") or (lhv.token_type == "float" and rhv.token_type=="int"):
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) >= float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":
-                    pass # decide how to handle string and other type additions
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the >= operator: {lhv} and {rhv}")
 
             elif token == '<=':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
@@ -244,44 +232,42 @@ def evaluate_postfix(postfix):
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) <= float(rhv.value)))
                 elif (lhv.token_type == "int" and rhv.token_type=="float") or (lhv.token_type == "float" and rhv.token_type=="int"):
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) <= float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":
-                    pass # decide how to handle string and other type additions
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the <= operator: {lhv} and {rhv}")
 
             elif token == '>':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
                     stack.append(Lexeme(lhv.line, 'boolean', int(lhv.value) > int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) > float(rhv.value)))
-                elif lhv.token_type == "int" or rhv.token_type=="float" or lhv.token_type == "float" or rhv.token_type=="int":
+                elif (lhv.token_type == "int" and rhv.token_type=="float") or (lhv.token_type == "float" and rhv.token_type == "int"):
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) > float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":
-                    pass # decide how to handle string and other type additions
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the > operator: {lhv} and {rhv}")
 
             elif token == '<':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
                     stack.append(Lexeme(lhv.line, 'boolean', int(lhv.value) < int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) < float(rhv.value)))
-                elif lhv.token_type == "int" or rhv.token_type=="float" or lhv.token_type == "float" or rhv.token_type=="int":
+                elif (lhv.token_type == "int" and rhv.token_type == "float") or (lhv.token_type == "float" and rhv.token_type == "int"):
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) < float(rhv.value)))
-                elif lhv.token_type == "string" or rhv.token_type=="string":
-                    pass # decide how to handle string and other type additions
-                elif lhv.token_type == "boolean" or rhv.token_type=="boolean":
-                    pass # decide how to handle string and other type additions
+                else:
+                    raise ValueError(f"Invalid operands for the < operator: {lhv} and {rhv}")
 
             elif token == '==':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
                     stack.append(Lexeme(lhv.line, 'boolean', int(lhv.value) == int(rhv.value)))
                 elif lhv.token_type == 'float' and rhv.token_type == 'float':
                     stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) == float(rhv.value)))
+                elif (lhv.token_type == "int" and rhv.token_type== "float") or (lhv.token_type == "float" and rhv.token_type == "int"):
+                    stack.append(Lexeme(lhv.line, 'boolean', float(lhv.value) == float(rhv.value)))
                 elif lhv.token_type == "string" and rhv.token_type=="string":
                     stack.append(Lexeme(lhv.line, 'boolean', str(lhv.value) == str(rhv.value)))
-                elif lhv.token_type == "boolean" and rhv.token_type=="boolean":
-                    stack.append(Lexeme(lhv.line, 'boolean', bool(lhv.value) == bool(rhv.value)))
+                elif lhv.token_type == "boolean" and rhv.token_type== "boolean":
+                    stack.append(Lexeme(lhv.line, 'boolean', lhv.value == rhv.value))
+                else:
+                    raise ValueError(f"Invalid operands for the == operator: {lhv} and {rhv}")
 
             elif token == '!=':
                 if lhv.token_type == 'int' and rhv.token_type == 'int':
@@ -291,7 +277,9 @@ def evaluate_postfix(postfix):
                 elif lhv.token_type == "string" and rhv.token_type=="string":
                     stack.append(Lexeme(lhv.line, 'boolean', str(lhv.value) != str(rhv.value)))
                 elif lhv.token_type == "boolean" and rhv.token_type=="boolean":
-                    stack.append(Lexeme(lhv.line, 'boolean', bool(lhv.value) != bool(rhv.value)))
+                    stack.append(Lexeme(lhv.line, 'boolean', lhv.value != rhv.value))
+                else:
+                    raise ValueError(f"Invalid operands for the != operator: {lhv} and {rhv}")
 
             elif token == '&':
                 if lhv.token_type == 'boolean' and rhv.token_type == 'boolean':
@@ -301,6 +289,7 @@ def evaluate_postfix(postfix):
 
             elif token == '|':
                 if lhv.token_type == 'boolean' and rhv.token_type == 'boolean':
+                    # NOTE: False | True is = to False - NOT SURE WHY?!
                     stack.append(Lexeme(lhv.line, 'boolean', lhv.value or rhv.value))
                 else:
                     raise ValueError("Invalid operands for the OR operator.")
