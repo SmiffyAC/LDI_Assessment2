@@ -104,31 +104,6 @@ def tokenize_arithmetic(content):
         tokens.append(Lexeme(line, 'number', num))
 
     return tokens
-
-# CAN MERGE THIS IWHT LEXEME CLASS - ADD VARIABLE TYPE AND VARIABLE NAME
-# WHEN FINDING A VARIABLE, ADD IT TO A DICTIONARY
-# IF I FIND VARIABLE NAME, REPLACE IT WITH THE VALUE
-# IF I FIND A VARIABLE NAME, AND IT IS NOT IN THE DICTIONARY, THROW AN ERROR
-# ADD FOR RIGHT HAND SIDE AND LEFT HAND SIDE
-# class Variable:
-#     # Use this when implementing variables
-#     def __init__(self, name, variable_type, value):
-#         self.name = name
-#         self.variable_type = variable_type
-#         self.value = value
-
-#     def __repr__(self):
-#         return f"Variable(name='{self.name}', variable_type='{self.variable_type}' ,value={self.value})"
-
-
-# class Lexeme:
-#     def __init__(self, line, token_type, value):
-#         self.line = line
-#         self.token_type = token_type
-#         self.value = value
-
-#     def __repr__(self):
-#         return f"Lexeme(line={self.line}, token_type='{self.token_type}', value='{self.value}')"
     
 class Lexeme:
     def __init__(self, line, token_type, value, name=None, variable_type=None):
@@ -145,51 +120,6 @@ class Lexeme:
 # Dictionary to store the variables
 variables = {}
 
-# def shunting_yard(tokens):
-#     """
-#     Tokenize arithmetic expressions.
-
-#     This function takes a string of arithmetic content and breaks it down into a list of Lexeme objects.
-#     Each Lexeme object represents a token in the content.
-
-#     Parameters:
-#         content (str): The arithmetic content to tokenize.
-
-#     Returns:
-#         list: A list of Lexeme objects representing the tokens in the content.
-
-#     """
-
-#     output_queue = []
-#     operator_stack = []
-
-#     precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '<=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1}
-#     associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '<=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L'}
-
-
-#     for lexeme in tokens:
-#         token = lexeme.value  # Use the value of the Lexeme object
-#         # if token.replace('.', '', 1).isdigit() or token in ['TRUE', 'FALSE', '"']:  # Check if the token is a digit, TRUE, FALSE, or a string
-#         #     output_queue.append(lexeme)  # Append the Lexeme object directly
-#         if lexeme.token_type in ['int', 'float', 'boolean', 'string']:
-#             output_queue.append(lexeme)  # Append the Lexeme object directly
-#         elif token in precedence:
-#             while operator_stack and operator_stack[-1].value != '(' and (
-#                 (associativity[token] == 'L' and precedence[token] <= precedence[operator_stack[-1].value]) or
-#                 (associativity[token] == 'R' and precedence[token] < precedence[operator_stack[-1].value])
-#             ):
-#                 output_queue.append(operator_stack.pop())
-#             operator_stack.append(lexeme)
-#         elif token == '(':
-#             operator_stack.append(lexeme)
-#         elif token == ')':
-#             while operator_stack and operator_stack[-1].value != '(':
-#                 output_queue.append(operator_stack.pop())
-#             operator_stack.pop()  # Remove '('
-#     while operator_stack:
-#         output_queue.append(operator_stack.pop())
-    
-#     return output_queue
 def shunting_yard(tokens, variables):
     output_queue = []
     operator_stack = []
@@ -220,8 +150,6 @@ def shunting_yard(tokens, variables):
     return output_queue
 
 
-
-
 def evaluate_postfix(postfix, variables):
     stack = []
     for lexeme in postfix:
@@ -243,6 +171,7 @@ def evaluate_postfix(postfix, variables):
                 raise ValueError("Insufficient values in the expression for binary operation.")
             rhv = stack.pop()
             lhv = stack.pop()
+
             # Perform the operation based on the token and push the result back on the stack
             if token == '+':
                 # Check the types of the operands to determine whether to add or concatenate using lexeme.token_type
@@ -389,7 +318,11 @@ def evaluate_postfix(postfix, variables):
         elif lexeme.token_type == 'identifier':
             # Push variable value if exists, else push variable name for later assignment
             if token in variables:
-                stack.append(Lexeme(lexeme.line, 'variable', variables[token], name=token))
+                # NOTE: This is a simple implementation that assumes all variables are integers!!!
+                # Get the type of the variable
+                variable_type_local = 'int'
+                # Get the variable value from the variables dictionary
+                stack.append(Lexeme(lexeme.line, token_type=variable_type_local, value=variables[token], name=token, variable_type=variable_type_local))
             else:
                 stack.append(Lexeme(lexeme.line, 'identifier', token, name=token))
         elif token == '=':
@@ -409,72 +342,10 @@ def evaluate_postfix(postfix, variables):
         else:
             raise ValueError(f"Unknown token: {lexeme}")
         
-        
 
     if len(stack) != 1:
         raise ValueError("The expression is invalid.")
     return stack[0].value
-
-
-
-def classify_character(char):
-    """
-    Classifies a given character based on its type or value.
-
-    Parameters:
-        char (str): The character to be classified.
-
-    Returns:
-        str: A string representing the character's classification. This can be 'digit', 'space', 'addition', 
-        'subtraction', 'multiplication', 'division', 'and', 'or', 'not', 'not equal to', 'greater than', 
-        'greater than or equal to', 'less than', 'less than or equal to', 'equal to', 'equals', or 'unknown'.
-    """
-
-    if char.isdigit():
-        return 'digit'
-    elif char.isspace():
-        return 'space'
-    elif char == '+':
-        return 'addition'
-    elif char == '-':
-        return 'subtraction'
-    elif char == '*':
-        return 'multiplication'
-    elif char == '/':
-        return 'division'
-    # AND, OR, NOT
-    elif char == '&':
-        return 'and'
-    elif char == '|':
-        return 'or'
-    # >, >=, <, <=, ==, !=
-    elif char == '!':
-        # check for not
-        if char == '=':
-            return 'not equal to'
-        else:
-            return 'not'
-    elif char == '>':
-        # Check for greater than or equal to
-        if char == '=':
-            return 'greater than or equal to'
-        else:
-            return 'greater than'
-    elif char == '<':
-        # Check for less than or equal to
-        if char == '=':
-            return 'less than or equal to'
-        else:
-            return 'less than'
-    elif char == '=':
-        # Check for equal to
-        if char == '=':
-            return 'equal to'
-        else:
-            return 'equals'
-    else:
-        return 'unknown'
-
 
 
 if __name__ == "__main__":
@@ -493,17 +364,3 @@ if __name__ == "__main__":
             result = evaluate_postfix(postfix, variables)
             print(f"Variables: {variables}")
             print(f"Result: {result}\n")
-
-
-
-
-
-    # content = read_arithmetic_file(file_name)
-    # tokens = tokenize_arithmetic(content)
-    # print(f"Tokens: {tokens}")
-    # postfix = shunting_yard(tokens, variables)
-    # print(f"Postfix: {' '.join(repr(lexeme) for lexeme in postfix)}")
-    # result = evaluate_postfix(postfix, variables)
-    # # Print out the variables dictionary
-    # print(f"Variables: {variables}")
-    # print(f"\nResult: {result}\n")
