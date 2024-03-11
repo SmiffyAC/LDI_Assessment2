@@ -1,2 +1,2 @@
-variable = 2
-variable + 10
+variable = "Hello"
+variable + " " + "there"

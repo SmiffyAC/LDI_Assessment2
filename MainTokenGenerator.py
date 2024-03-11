@@ -119,6 +119,8 @@ class Lexeme:
 
 # Dictionary to store the variables
 variables = {}
+# Dictionary to store the variable types
+variable_types = {}
 
 def shunting_yard(tokens, variables):
     output_queue = []
@@ -319,8 +321,10 @@ def evaluate_postfix(postfix, variables):
             # Push variable value if exists, else push variable name for later assignment
             if token in variables:
                 # NOTE: This is a simple implementation that assumes all variables are integers!!!
-                # Get the type of the variable
-                variable_type_local = 'int'
+                # # Get the type of the variable
+                # variable_type_local = 'int'
+                # Get the variable type from the variable_types dictionary
+                variable_type_local = variable_types[token]
                 # Get the variable value from the variables dictionary
                 stack.append(Lexeme(lexeme.line, token_type=variable_type_local, value=variables[token], name=token, variable_type=variable_type_local))
             else:
@@ -336,7 +340,9 @@ def evaluate_postfix(postfix, variables):
             # Update the variables dictionary
             variables[variable_lexeme.value] = value_lexeme.value
             # Update the variable type
-            variable_lexeme.variable_type = value_lexeme.token_type
+            variable_types[variable_lexeme.value] = value_lexeme.token_type
+            # # Update the variable type
+            # variable_lexeme.variable_type = value_lexeme.token_type
             # Push the assignment result back to stack if needed
             stack.append(value_lexeme)
         else:
@@ -363,4 +369,5 @@ if __name__ == "__main__":
             print(f"Postfix: {' '.join(repr(lexeme) for lexeme in postfix)}")
             result = evaluate_postfix(postfix, variables)
             print(f"Variables: {variables}")
+            print(f"Variable Types: {variable_types}")
             print(f"Result: {result}\n")
