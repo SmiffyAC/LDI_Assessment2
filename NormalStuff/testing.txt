@@ -1,0 +1,3 @@
+quickMaths = 10
+quickMaths + 2
+print quickMaths

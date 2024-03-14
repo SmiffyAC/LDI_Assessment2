@@ -96,7 +96,10 @@ def tokenize_arithmetic(content):
             while i + 1 < len(content) and (content[i + 1].isalnum() or content[i + 1] == '_'):
                 i += 1
             identifier = content[start:i+1]
-            tokens.append(Lexeme(line, 'identifier', identifier))
+            if identifier == 'print':
+                tokens.append(Lexeme(line, 'print', identifier))
+            else:
+                tokens.append(Lexeme(line, 'identifier', identifier))
 
         i += 1
 
@@ -122,17 +125,47 @@ variables = {}
 # Dictionary to store the variable types
 variable_types = {}
 
+# def shunting_yard(tokens, variables):
+#     output_queue = []
+#     operator_stack = []
+#     precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1, '=': -2}
+#     associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L', '=': 'R'}
+
+#     for lexeme in tokens:
+#         token = lexeme.value
+#         if lexeme.token_type in ['int', 'float', 'boolean', 'string', 'identifier','print']:
+#             output_queue.append(lexeme)
+#         elif token in precedence:
+#             while operator_stack and operator_stack[-1].value != '(' and (
+#                 (associativity[token] == 'L' and precedence[token] <= precedence[operator_stack[-1].value]) or
+#                 (associativity[token] == 'R' and precedence[token] < precedence[operator_stack[-1].value])
+#             ):
+#                 output_queue.append(operator_stack.pop())
+#             operator_stack.append(lexeme)
+#         elif token == '(':
+#             operator_stack.append(lexeme)
+#         elif token == ')':
+#             while operator_stack and operator_stack[-1].value != '(':
+#                 output_queue.append(operator_stack.pop())
+#             operator_stack.pop()
+
+#     while operator_stack:
+#         output_queue.append(operator_stack.pop())
+
+#     return output_queue
+
 def shunting_yard(tokens, variables):
     output_queue = []
     operator_stack = []
-    precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1, '=': -2}
-    associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L', '=': 'R'}
+    # Updated to include 'print' with a specific precedence
+    precedence = {'+': 2, '-': 2, '*': 3, '/': 3, '>=': 1, '==': 1, '!=': 1, '!': 4, '&': 0, '|': -1, '>': 1, '<': 1, '=': -2, 'print': 5}
+    associativity = {'+': 'L', '-': 'L', '*': 'L', '/': 'L', '>=': 'L', '==': 'L', '!=': 'L', '!': 'R', '&': 'L', '|': 'L', '>': 'L', '<': 'L', '=': 'R', 'print': 'R'}
 
     for lexeme in tokens:
         token = lexeme.value
         if lexeme.token_type in ['int', 'float', 'boolean', 'string', 'identifier']:
             output_queue.append(lexeme)
-        elif token in precedence:
+        elif token == 'print' or token in precedence:
             while operator_stack and operator_stack[-1].value != '(' and (
                 (associativity[token] == 'L' and precedence[token] <= precedence[operator_stack[-1].value]) or
                 (associativity[token] == 'R' and precedence[token] < precedence[operator_stack[-1].value])
@@ -144,12 +177,13 @@ def shunting_yard(tokens, variables):
         elif token == ')':
             while operator_stack and operator_stack[-1].value != '(':
                 output_queue.append(operator_stack.pop())
-            operator_stack.pop()
+            operator_stack.pop()  # Pop the '('
 
     while operator_stack:
         output_queue.append(operator_stack.pop())
 
     return output_queue
+
 
 
 def evaluate_postfix(postfix, variables):
@@ -345,6 +379,17 @@ def evaluate_postfix(postfix, variables):
             # variable_lexeme.variable_type = value_lexeme.token_type
             # Push the assignment result back to stack if needed
             stack.append(value_lexeme)
+        # Handle print functionality
+        elif lexeme.token_type == 'print':
+            # if not stack:
+            #     raise ValueError("Insufficient values for print.")
+            # Peek at the top of the stack
+            print_value = stack[-1]
+            if print_value.token_type == 'identifier':
+                # If it's a variable, print its value
+                print(f"PRINT: {variables[print_value.value]}")
+            else:
+                print(f"PRINT: {print_value.value}")
         else:
             raise ValueError(f"Unknown token: {lexeme}")
         
@@ -360,8 +405,10 @@ if __name__ == "__main__":
     file_name = "testing.txt"
 
     lines = read_arithmetic_file(file_name)
+    all_lines = []
     for line in lines:
         print(f"Line: {line}")
+        all_lines.append(line)
         tokens = tokenize_arithmetic(line.strip())  # Ensure to strip newline characters
         if tokens:  # Check if line is not empty
             print(f"Tokens: {tokens}")
