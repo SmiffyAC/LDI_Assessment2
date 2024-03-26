@@ -1,0 +1,29 @@
+print("Greetings universe!")
+
+var i = 0
+
+var x = 0
+
+while i < 6 :
+
+	print("First While Loop")
+
+	while x < 3 :
+		print ("Second While Loop")
+		var x = x + 1
+	end
+
+	var i = i + 1
+
+end
+
+var res = True + True
+
+print(res)
+
+
+print ("hello" + " " + "world")
+print ("5" + "5")
+print (True + False)
+print (1 == 1.0)
+print (2 == 1.0)
