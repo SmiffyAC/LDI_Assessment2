@@ -1,5 +1,7 @@
 print("Greetings universe!")
 
+
+print("\nWHILE LOOP------------------------------")
 var i = 0
 
 var x = 0
@@ -17,13 +19,10 @@ while i < 6 :
 
 end
 
-var res = True + True
+var res1 = True + True
 
-print(res)
+print(res1)
 
+var res2 = True + False
 
-print ("hello" + " " + "world")
-print ("5" + "5")
-print (True + False)
-print (1 == 1.0)
-print (2 == 1.0)
+print(res2)
