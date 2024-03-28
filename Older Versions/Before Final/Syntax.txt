@@ -1,0 +1,2 @@
++ is treated as AND so output will be a BOOL
+
