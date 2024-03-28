@@ -1,14 +1,73 @@
-var res = False and True
+# Stage 1: Basic Calculator (0 - 20%)
+print("\n----------------- STAGE 1 - BASIC CALCULATOR (0 - 20%) -----------------")
 
-print("AND")
-print(res)
+# Adding
+print("ADDING TEST")
+print(1 + 1)
 
-var res1 = False or True
+# Subtracting
+print("SUBTRACTING TEST")
+print(10 - 1)
 
-print("OR")
-print(res1)
+# Multiplication
+print("MULTIPLICATION TEST")
+print(10 * 10)
 
-var res2 = not True
+# Division - THIS IS FLOAT????
+print("DIVISION TEST")
+print(100 / 10)
 
-print("NOT")
-print (res2)
+# Parenthesis
+print("PARENTHESIS TEST")
+print((100 - 50) * 3)
+print(100 - (50 * 3))
+
+# Negative Numbers
+print("NEGATIVE NUMBERS TEST")
+print(-5 - 7)
+print (-10 - -6)
+print("-------------------------------------------------------------------------")
+
+# Stage 2: Boolean Logic (20 - 40%)
+print("\n------------------ STAGE 2 - BOOLEAN LOGIC (20 - 40%) ------------------")
+
+# Binary Comparison for numbers
+print("BINARY COMPARISON FOR NUMBERS TEST")
+print(1 == 1)
+print(1 == 0)
+
+# Binary Comparison for Booleans
+print("BINARY COMPARISON FOR BOOLEANS TEST")
+print(True == True)
+print(True == False)
+
+# AND and OR
+print("AND AND OR TEST")
+print(True and True)
+print(False and False)
+print(True or True)
+print(False or True)
+
+# Unary Negation of Booleans???? - LOOK AT THIS!!!!
+print("UNARY NEGATION OF BOOLEANS TEST")
+print(not True)
+print(not False)
+print("-------------------------------------------------------------------------")
+
+# Stage 3: Text values (40 - 50%)
+print("\n------------------ STAGE 3: TEXT VALUES (40 - 50%) ---------------------")
+
+# Concatenation of text values
+print("CONCATENATION OF TEXT VALUES TEST")
+print("Hello" + " " + "World!")
+# Binary comparisons between text values
+print("BINARY COMPARISONS BETWEEN TEXT VALUES TEST")
+print("Hello World!" == "Hello World!")
+print("Hello World!" == "Hello")
+print("Hello World!" != "Hello World!")
+print("Hello World!" != "Hello")
+print("-------------------------------------------------------------------------")
+
+# Stage 4: Global Data (50 - 60%)
+print("\n------------------ STAGE 4: GLOBAL DATA (50 - 60%) ---------------------")
+print("-------------------------------------------------------------------------")

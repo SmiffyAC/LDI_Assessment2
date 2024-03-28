@@ -30,3 +30,8 @@ while i < 6:
   i += 1
 
 print("\n")
+
+
+ans = not (5 - 4 > 3 * 2 == (not False))
+
+print(ans)

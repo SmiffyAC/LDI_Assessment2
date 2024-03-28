@@ -266,21 +266,22 @@ class Lexer:
     self.advance()
 
     escape_characters = {
-      'n': '\n',
-      't': '\t'
+        'n': '\n',
+        't': '\t'
+        # Add more escape sequences here as needed
     }
 
     while self.current_char != None and (self.current_char != '"' or escape_character):
-      if escape_character:
-        string += escape_characters.get(self.current_char, self.current_char)
-      else:
-        if self.current_char == '\\':
-          escape_character = True
+        if escape_character:
+            string += escape_characters.get(self.current_char, self.current_char)
+            escape_character = False
         else:
-          string += self.current_char
-      self.advance()
-      escape_character = False
-    
+            if self.current_char == '\\':
+                escape_character = True
+            else:
+                string += self.current_char
+        self.advance()
+
     self.advance()
     return Token(TT_STRING, string, pos_start, self.pos)
 
@@ -1323,6 +1324,17 @@ class Boolean(Value):
     def notted(self):
         return Boolean(not self.value).set_context(self.context), None
 
+    def get_comparison_eq(self, other):
+      if isinstance(other, Boolean):
+          return Boolean(self.value == other.value).set_context(self.context), None
+      else:
+          return None, Value.illegal_operation(self, other)
+      
+    def get_comparison_ne(self, other):
+      if isinstance(other, Boolean):
+        return Boolean(self.value != other.value).set_context(self.context), None
+      else:
+        return None, Value.illegal_operation(self, other)
 
 class Number(Value):
   def __init__(self, value):
@@ -1471,6 +1483,18 @@ class String(Value):
   def __init__(self, value):
     super().__init__()
     self.value = value
+
+  def get_comparison_eq(self, other):
+    if isinstance(other, String):
+        return Boolean(self.value == other.value).set_context(self.context), None
+    else:
+        return None, Value.illegal_operation(self, other)
+    
+  def get_comparison_ne(self, other):
+    if isinstance(other, String):
+        return Boolean(self.value != other.value).set_context(self.context), None
+    else:
+        return None, Value.illegal_operation(self, other)
 
   def added_to(self, other):
     if isinstance(other, String):

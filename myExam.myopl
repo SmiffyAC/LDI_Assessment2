@@ -1,7 +1,7 @@
 print("Greetings universe!")
 
 
-print("\nWHILE LOOP------------------------------")
+print("WHILE LOOP------------------------------")
 var i = 0
 
 var x = 0
@@ -23,6 +23,39 @@ var res1 = True + True
 
 print(res1)
 
-var res2 = True + False
+print("")
+print("BOOL COMPS")
+var bool_comp_one = True == True
+print(bool_comp_one)
+var bool_comp_two = True == False
+print(bool_comp_two)
 
-print(res2)
+print("")
+print("INT COMPS")
+var int_comp_one = 1 == 1
+print(int_comp_one)
+var int_comp_two = 1 == 0
+print(int_comp_two)
+
+print("")
+print("STRING COMPS")
+var str_comp_one = "Hello World" == "Hello World"
+print(str_comp_one)
+var str_comp_two = "Hello World" == "Hello "
+print(str_comp_two)
+var str_comp_three = "foo" + "bar" == "foobar"
+print(str_comp_three)
+var str_comp_four = "goo" + "bar" == "foobar"
+print(str_comp_four)
+
+
+print("!= COMPS")
+var comp_six = "10 corgis" != "10" + "corgis"
+print(comp_six)
+var comp_seven = True != False
+print(comp_seven)
+var comp_eight = 10 != 10
+print(comp_eight)
+
+var mm = not False
+print(mm)
