@@ -1,0 +1,14 @@
+var res = False and True
+
+print("AND")
+print(res)
+
+var res1 = False or True
+
+print("OR")
+print(res1)
+
+var res2 = not True
+
+print("NOT")
+print (res2)
