@@ -165,8 +165,12 @@ class Token:
 # LEXER
 #######################################
 
+# Takes raw input text and converts it to a list of tokens
+# Each token is a small object containing the token type and value
+
 class Lexer:
   def __init__(self, fn, text):
+    # Initilize the lexer with the file name and the text to be tokenized
     self.fn = fn
     self.text = text
     self.pos = Position(-1, 0, -1, fn, text)
@@ -174,10 +178,14 @@ class Lexer:
     self.advance()
   
   def advance(self):
+    # Moves the lexer's current character position
     self.pos.advance(self.current_char)
     self.current_char = self.text[self.pos.idx] if self.pos.idx < len(self.text) else None
 
   def make_tokens(self):
+    # Converts raw input text into a list of tokens.
+    # Iterates through each character. identifies the token type, 
+    #   and calls the appropraite methods to creat the token.
     tokens = []
 
     while self.current_char != None:
@@ -243,23 +251,25 @@ class Lexer:
     return tokens, None
 
   def make_number(self):
+    # Creates a number token (int or float) from the current position in the input text.
     num_str = ''
-    dot_count = 0
+    dot_count = False
     pos_start = self.pos.copy()
 
     while self.current_char != None and self.current_char in DIGITS + '.':
       if self.current_char == '.':
-        if dot_count == 1: break
-        dot_count += 1
+        if dot_count == True: break
+        dot_count = True
       num_str += self.current_char
       self.advance()
 
-    if dot_count == 0:
+    if dot_count == False:
       return Token(TT_INT, int(num_str), pos_start, self.pos)
     else:
       return Token(TT_FLOAT, float(num_str), pos_start, self.pos)
 
   def make_string(self):
+    # Creates a string token from the current position in the input text, handling escape characters.
     string = ''
     pos_start = self.pos.copy()
     escape_character = False
@@ -268,7 +278,6 @@ class Lexer:
     escape_characters = {
         'n': '\n',
         't': '\t'
-        # Add more escape sequences here as needed
     }
 
     while self.current_char != None and (self.current_char != '"' or escape_character):
@@ -286,6 +295,7 @@ class Lexer:
     return Token(TT_STRING, string, pos_start, self.pos)
 
   def make_identifier(self):
+    # Creates an identifier token (variable name or keyword) from the current position in the input text.
     id_str = ''
     pos_start = self.pos.copy()
 
@@ -297,6 +307,7 @@ class Lexer:
     return Token(tok_type, id_str, pos_start, self.pos)
 
   def make_minus_or_arrow(self):
+    # Creates a minus token or an arrow token from the current position in the input text.
     tok_type = TT_MINUS
     pos_start = self.pos.copy()
     self.advance()
@@ -308,6 +319,7 @@ class Lexer:
     return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
   def make_not_equals(self):
+    # Creates a not equals token if the next character is '=', otherwise returns an error.
     pos_start = self.pos.copy()
     self.advance()
 
@@ -319,6 +331,7 @@ class Lexer:
     return None, ExpectedCharError(pos_start, self.pos, "'=' (after '!')")
   
   def make_equals(self):
+    # Creates an equals token or a double equals token based on the next character in the input text.
     tok_type = TT_EQ
     pos_start = self.pos.copy()
     self.advance()
@@ -330,6 +343,7 @@ class Lexer:
     return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
   def make_less_than(self):
+    # Creates a less than token or a less than or equal token based on the next character in the input text.
     tok_type = TT_LT
     pos_start = self.pos.copy()
     self.advance()
@@ -341,6 +355,7 @@ class Lexer:
     return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
   def make_greater_than(self):
+    # Creates a greater than token or greater than or equal to token based on the next character in the input text.
     tok_type = TT_GT
     pos_start = self.pos.copy()
     self.advance()
@@ -352,6 +367,7 @@ class Lexer:
     return Token(tok_type, pos_start=pos_start, pos_end=self.pos)
 
   def skip_comment(self):
+    # Skips comments in the input text starting with '#' until a newline character is encountered.
     self.advance()
 
     while self.current_char != '\n':
@@ -364,6 +380,11 @@ class Lexer:
 #######################################
 
 class NumberNode:
+
+  # What does this class do?
+  # This class is part of the AST and is used duirng the parsing and interpretaion phases
+  # It is used to represent a node in the AST that is a number
+
   def __init__(self, tok):
     self.tok = tok
 
@@ -531,6 +552,14 @@ class ParseResult:
 # PARSER
 #######################################
 
+# Takes a list of tokens and constructs an Abstract Syntax Tree (AST)
+# Each node in the AST represents a construct in the language such as
+#   a binary operation, vaiable assignment, function definition, etc.
+# Checks the syntax of the input code based on the given grammar rules.
+
+# Each node in the AST is represent by a specific class such as NumberNode, 
+#   BinOpNode, VarAssignNode, etc.
+
 class Parser:
   def __init__(self, tokens):
     self.tokens = tokens
@@ -563,6 +592,10 @@ class Parser:
   ###################################
 
   def statements(self):
+
+    # Recursively parses each statement by calling the statement() function
+    # Handles NEWLINE tokens too
+
     res = ParseResult()
     statements = []
     pos_start = self.current_tok.pos_start.copy()
@@ -601,6 +634,11 @@ class Parser:
     ))
 
   def statement(self):
+
+    # Parses individual statements such as variable assignments, function definitions, etc.
+    # Determines the type of statement based on the current tooken and calls the appropraite 
+    #   method to parse that specific statement.
+
     res = ParseResult()
     pos_start = self.current_tok.pos_start.copy()
 
@@ -632,6 +670,10 @@ class Parser:
     return res.success(expr)
 
   def expr(self):
+
+    # Parases expression, which includes binary operations, comparisons and function calls.
+    # Recursively calls other methods like comp_expr(), arith_expr(), etc. to parse the expression.
+
     res = ParseResult()
 
     if self.current_tok.matches(TT_KEYWORD, 'var'):
@@ -754,6 +796,10 @@ class Parser:
     return res.success(atom)
 
   def atom(self):
+
+    # Parses atomic expressions such as numbers, strings, identifiers, lists, if expressions, 
+    #   while expressions, function definitions, etc.
+
     res = ParseResult()
     tok = self.current_tok
 
@@ -1337,15 +1383,16 @@ class Boolean(Value):
         return None, Value.illegal_operation(self, other)
 
 class Number(Value):
+
+  # What does this do?
+  # Holds the data for a numerio variable or constant.
+  # Handles addition, subtraction, multiplication, division, and exponentiation.
+  # Also handles comparisons.
+
   def __init__(self, value):
     super().__init__()
     self.value = value
 
-  # def added_to(self, other):
-  #   if isinstance(other, Number):
-  #     return Number(self.value + other.value).set_context(self.context), None
-  #   else:
-  #     return None, Value.illegal_operation(self, other)
   def added_to(self, other):
     if isinstance(other, Number):
         return Number(self.value + other.value).set_context(self.context), None
