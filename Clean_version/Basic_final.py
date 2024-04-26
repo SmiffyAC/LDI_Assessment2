@@ -379,12 +379,11 @@ class Lexer:
 # NODES
 #######################################
 
+# The Parser constructs the AST by creating nodes for each construct in the language
+# Each node is a small object representing a specific construct such as a binary operation,
+
 class NumberNode:
-
-  # What does this class do?
-  # This class is part of the AST and is used duirng the parsing and interpretaion phases
-  # It is used to represent a node in the AST that is a number
-
+  # Represents a number node in the AST
   def __init__(self, tok):
     self.tok = tok
 
@@ -395,6 +394,7 @@ class NumberNode:
     return f'{self.tok}'
 
 class StringNode:
+  # Represents a string node in the AST
   def __init__(self, tok):
     self.tok = tok
 
@@ -405,6 +405,7 @@ class StringNode:
     return f'{self.tok}'
 
 class ListNode:
+  # Represents a list node in the AST
   def __init__(self, element_nodes, pos_start, pos_end):
     self.element_nodes = element_nodes
 
@@ -412,6 +413,7 @@ class ListNode:
     self.pos_end = pos_end
 
 class VarAccessNode:
+  # Represents a variable access node in the AST
   def __init__(self, var_name_tok):
     self.var_name_tok = var_name_tok
 
@@ -419,6 +421,7 @@ class VarAccessNode:
     self.pos_end = self.var_name_tok.pos_end
 
 class VarAssignNode:
+  # Holds the token representing the variable name and the value to be assigned to the variable
   def __init__(self, var_name_tok, value_node):
     self.var_name_tok = var_name_tok
     self.value_node = value_node
@@ -427,6 +430,7 @@ class VarAssignNode:
     self.pos_end = self.value_node.pos_end
 
 class BinOpNode:
+  # Holds the left node, the operation token and the right node.
   def __init__(self, left_node, op_tok, right_node):
     self.left_node = left_node
     self.op_tok = op_tok
@@ -439,6 +443,7 @@ class BinOpNode:
     return f'({self.left_node}, {self.op_tok}, {self.right_node})'
 
 class UnaryOpNode:
+  # Holds the operation token, and the node it operates on.
   def __init__(self, op_tok, node):
     self.op_tok = op_tok
     self.node = node
@@ -450,6 +455,7 @@ class UnaryOpNode:
     return f'({self.op_tok}, {self.node})'
 
 class IfNode:
+  # Holds the list of cases and the optional else case along with the start and end positions.
   def __init__(self, cases, else_case):
     self.cases = cases
     self.else_case = else_case
@@ -458,6 +464,7 @@ class IfNode:
     self.pos_end = (self.else_case or self.cases[len(self.cases) - 1])[0].pos_end
 
 class WhileNode:
+  # Holds the condition node and the body node and a flag indicating whether it should return null.
   def __init__(self, condition_node, body_node, should_return_null):
     self.condition_node = condition_node
     self.body_node = body_node
@@ -467,6 +474,8 @@ class WhileNode:
     self.pos_end = self.body_node.pos_end
 
 class FuncDefNode:
+  # Holds the token representing the function name, the list of argument names, the body node, a flag indicating whether
+  #  the function should auto return, and the start and end positions.
   def __init__(self, var_name_tok, arg_name_toks, body_node, should_auto_return):
     self.var_name_tok = var_name_tok
     self.arg_name_toks = arg_name_toks
@@ -483,6 +492,7 @@ class FuncDefNode:
     self.pos_end = self.body_node.pos_end
 
 class CallNode:
+  # Holds the node representing the function being called, the list of argument nodes, and the start and end positions.
   def __init__(self, node_to_call, arg_nodes):
     self.node_to_call = node_to_call
     self.arg_nodes = arg_nodes
@@ -495,6 +505,7 @@ class CallNode:
       self.pos_end = self.node_to_call.pos_end
 
 class ReturnNode:
+  # Holds the value to be returned.
   def __init__(self, node_to_return, pos_start, pos_end):
     self.node_to_return = node_to_return
 
@@ -502,11 +513,13 @@ class ReturnNode:
     self.pos_end = pos_end
 
 class ContinueNode:
+  # Represents a continue statement, and holds the start and end positions.
   def __init__(self, pos_start, pos_end):
     self.pos_start = pos_start
     self.pos_end = pos_end
 
 class BreakNode:
+  # Represents a break statement, and holds the start and end positions.
   def __init__(self, pos_start, pos_end):
     self.pos_start = pos_start
     self.pos_end = pos_end
@@ -562,16 +575,19 @@ class ParseResult:
 
 class Parser:
   def __init__(self, tokens):
+    # Initilize the parser with the list of tokens to be parsed
     self.tokens = tokens
     self.tok_idx = -1
     self.advance()
 
   def advance(self):
+    # Moves the parser's current token position
     self.tok_idx += 1
     self.update_current_tok()
     return self.current_tok
 
   def reverse(self, amount=1):
+    # Moves the parser's current token position back by a certain amount
     self.tok_idx -= amount
     self.update_current_tok()
     return self.current_tok
@@ -581,6 +597,7 @@ class Parser:
       self.current_tok = self.tokens[self.tok_idx]
 
   def parse(self):
+    # Starts the parsing process by calling the statements() method.
     res = self.statements()
     if not res.error and self.current_tok.type != TT_EOF:
       return res.failure(InvalidSyntaxError(
@@ -589,13 +606,8 @@ class Parser:
       ))
     return res
 
-  ###################################
-
   def statements(self):
-
-    # Recursively parses each statement by calling the statement() function
-    # Handles NEWLINE tokens too
-
+    # Parses a list of statements by repeatedly calling the statement() method.
     res = ParseResult()
     statements = []
     pos_start = self.current_tok.pos_start.copy()
@@ -634,11 +646,9 @@ class Parser:
     ))
 
   def statement(self):
-
     # Parses individual statements such as variable assignments, function definitions, etc.
-    # Determines the type of statement based on the current tooken and calls the appropraite 
+    # Determines the type of statement based on the current token and calls the appropraite 
     #   method to parse that specific statement.
-
     res = ParseResult()
     pos_start = self.current_tok.pos_start.copy()
 
@@ -670,10 +680,8 @@ class Parser:
     return res.success(expr)
 
   def expr(self):
-
-    # Parases expression, which includes binary operations, comparisons and function calls.
+    # Parases an expression, which includes binary operations, comparisons and function calls.
     # Recursively calls other methods like comp_expr(), arith_expr(), etc. to parse the expression.
-
     res = ParseResult()
 
     if self.current_tok.matches(TT_KEYWORD, 'var'):
@@ -713,6 +721,7 @@ class Parser:
     return res.success(node)
 
   def comp_expr(self):
+    # 
     res = ParseResult()
 
     if self.current_tok.matches(TT_KEYWORD, 'not'):
@@ -1170,7 +1179,6 @@ class Parser:
       False
     ))
 
-  ###################################
 
   def bin_op(self, func_a, ops, func_b=None):
     if func_b == None:
