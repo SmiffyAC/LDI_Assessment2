@@ -1,7 +1,7 @@
 import Basic_final
 
 while True:
-	text = input('\nbasic > ')
+	text = input('\nshell > ')
 	if text.strip() == "": continue
 	result, error = Basic_final.run('<stdin>', text)
 
