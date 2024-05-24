@@ -74,6 +74,23 @@ print("-------------------------------------------------------------------------
 
 # Stage 5: Control Flow (60 - 80%)
 print("\n------------------ STAGE 5: CONTROL FLOW (60 - 80%) ---------------------")
+print("WHILE LOOP------------------------------")
+var i = 0
+
+var x = 0
+
+while i < 6 :
+
+	print("First While Loop")
+
+	while x < 3 :
+		print ("Second While Loop")
+		var x = x + 1
+	end
+
+	var i = i + 1
+
+end
 print("-------------------------------------------------------------------------")
 
 # Stage 6: Additional Features (80%+)
