@@ -1,4 +1,5 @@
-from shared import Position, Error, IllegalCharError, ExpectedCharError, DIGITS, LETTERS, LETTERS_DIGITS
+from shared import Position, DIGITS, LETTERS, LETTERS_DIGITS
+from errors import Error, IllegalCharError, ExpectedCharError
 
 #######################################
 # TOKENS
