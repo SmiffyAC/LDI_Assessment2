@@ -1,0 +1,29 @@
+# Stage 1: Basic Calculator (0 - 20%)
+print("\n----------------- STAGE 1 - BASIC CALCULATOR (0 - 20%) -----------------")
+
+# Adding
+print("\nADDING TEST")
+print(1 + 1)
+
+# Subtracting
+print("\nSUBTRACTING TEST")
+print(10 - 1)
+
+# Multiplication
+print("\nMULTIPLICATION TEST")
+print(10 * 10)
+
+# Division - THIS IS FLOAT????
+print("\nDIVISION TEST")
+print(100 / 10)
+
+# Parenthesis
+print("\nPARENTHESIS TEST")
+print((100 - 50) * 3)
+print(100 - (50 * 3))
+
+# Negative Numbers
+print("\nNEGATIVE NUMBERS TEST")
+print(-5 - 7)
+print (-10 - -6)
+print("-------------------------------------------------------------------------")
