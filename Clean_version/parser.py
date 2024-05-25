@@ -2,6 +2,7 @@
 
 from shared import *
 from lexer import *
+from errors import InvalidSyntaxError
 
 #######################################
 # NODES

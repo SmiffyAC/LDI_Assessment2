@@ -230,6 +230,7 @@ class BuiltInFunction(BaseFunction):
   execute_len.arg_names = ["list"]
 
   def execute_run(self, exec_ctx):
+    from Basic_final import run
     fn = exec_ctx.symbol_table.get("fn")
 
     if not isinstance(fn, String):
