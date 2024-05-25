@@ -1,7 +1,7 @@
 # interpreter.py
 
 from values import *
-from values import *
+from lexer import *
 from errors import RTError
 from symbol_table import SymbolTable, Context
 

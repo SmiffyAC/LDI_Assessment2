@@ -8,7 +8,7 @@ from parser import Parser
 from errors import *
 from values import *
 from interpreter import Interpreter, RTResult
-from builtins import BuiltInFunction
+from built_ins import *
 from symbol_table import SymbolTable, Context
 
 import string
