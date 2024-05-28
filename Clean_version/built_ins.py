@@ -3,7 +3,7 @@
 import os
 from values import *
 from errors import RTError
-from interpreter import RTResult
+from shared import RTResult
 from symbol_table import SymbolTable, Context
 
 #######################################

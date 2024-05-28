@@ -7,7 +7,8 @@ from lexer import Lexer
 from parser import Parser
 from errors import *
 from values import *
-from interpreter import Interpreter, RTResult
+from interpreter import Interpreter
+from shared import RTResult
 from built_ins import *
 from symbol_table import SymbolTable, Context
 

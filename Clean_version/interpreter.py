@@ -1,65 +1,66 @@
 # interpreter.py
 
-from values import *
+# from values import *
+from values import Number, String, List, Boolean
 from lexer import *
 from errors import RTError
 from symbol_table import SymbolTable, Context
+from shared import RTResult
 
-#######################################
-# RUNTIME RESULT
-#######################################
+class Function():
+  def __init__(self, name, body_node, arg_names):
+    super().__init__()
+    self.name = name or "<anonymous>"
+    self.body_node = body_node
+    self.arg_names = arg_names
 
-class RTResult:
-  def __init__(self):
-    self.reset()
-
-  def reset(self):
-    self.value = None
-    self.error = None
-    self.func_return_value = None
-    self.loop_should_continue = False
-    self.loop_should_break = False
-
-  def register(self, res):
-    self.error = res.error
-    self.func_return_value = res.func_return_value
-    self.loop_should_continue = res.loop_should_continue
-    self.loop_should_break = res.loop_should_break
-    return res.value
-
-  def success(self, value):
-    self.reset()
-    self.value = value
+  def set_pos(self, pos_start=None, pos_end=None):
+    self.pos_start = pos_start
+    self.pos_end = pos_end
     return self
 
-  def success_return(self, value):
-    self.reset()
-    self.func_return_value = value
-    return self
-  
-  def success_continue(self):
-    self.reset()
-    self.loop_should_continue = True
+  def set_context(self, context=None):
+    self.context = context
     return self
 
-  def success_break(self):
-    self.reset()
-    self.loop_should_break = True
-    return self
+  def execute(self, args):
+    res = RTResult()
+    interpreter = Interpreter()
+    new_context = Context(self.name, self.context, self.pos_start)
+    new_context.symbol_table = SymbolTable(new_context.parent.symbol_table)
 
-  def failure(self, error):
-    self.reset()
-    self.error = error
-    return self
+    if len(args) > len(self.arg_names):
+      return res.failure(RTError(
+        self.pos_start, self.pos_end,
+        f"{len(args) - len(self.arg_names)} too many args passed into '{self.name}'",
+        self.context
+      ))
+      
+    if len(args) < len(self.arg_names):
+      return res.failure(RTError(
+        self.pos_start, self.pos_end,
+        f"{len(self.arg_names) - len(args)} too few args passed into '{self.name}'",
+        self.context
+      ))
 
-  def should_return(self):
-    # Note: this will allow you to continue and break outside the current function
-    return (
-      self.error or
-      self.func_return_value or
-      self.loop_should_continue or
-      self.loop_should_break
-    )
+    for i in range(len(args)):
+      arg_name = self.arg_names[i]
+      arg_value = args[i]
+      arg_value.set_context(new_context)
+      new_context.symbol_table.set(arg_name, arg_value)
+
+    value = res.register(interpreter.visit(self.body_node, new_context))
+    if res.error: return res
+    return res.success(value)
+
+  def copy(self):
+    copy = Function(self.name, self.body_node, self.arg_names)
+    copy.set_context(self.context)
+    copy.set_pos(self.pos_start, self.pos_end)
+    return copy
+
+  def __repr__(self):
+    return f"<function {self.name}>"
   
 #######################################
 # INTERPRETER
@@ -271,3 +272,5 @@ class Interpreter:
 
   def visit_BreakNode(self, node, context):
     return RTResult().success_break()
+  
+
