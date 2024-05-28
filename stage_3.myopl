@@ -2,10 +2,10 @@
 print("\n------------------ STAGE 3: TEXT VALUES (40 - 50%) ---------------------")
 
 # Concatenation of text values
-print("CONCATENATION OF TEXT VALUES TEST")
+print("\nCONCATENATION OF TEXT VALUES TEST:")
 print("Hello" + " " + "World!")
 # Binary comparisons between text values
-print("BINARY COMPARISONS BETWEEN TEXT VALUES TEST")
+print("\nBINARY COMPARISONS BETWEEN TEXT VALUES TEST:")
 print("Hello World!" == "Hello World!")
 print("Hello World!" == "Hello")
 print("Hello World!" != "Hello World!")

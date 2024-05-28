@@ -35,7 +35,7 @@ var sum = add(3, 4)
 print(sum)
 
 print("Function for checking if two lists have the same length:")
-fun check(string1, string2) -> len(string1) == len(string2) 
+fun check(list1, list2) -> len(list1) == len(list2) 
 var test = check([1,2,3], [1,2,3,4,5,6])
 print(test)
 

@@ -17,6 +17,8 @@ print(True != False)
 print("\nAND OR TEST")
 print(True and True)
 print(False and False)
+print(True + True)
+print(True + False)
 print(True or True)
 print(False or True)
 

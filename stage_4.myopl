@@ -13,4 +13,8 @@ var stringCatTest = "10 corgis"
 var stringCatTest = stringCatTest + " 5" + " more corgis"
 print (stringCatTest)
 
+var booleanTest = True
+var notBooleanTest = not booleanTest
+print(notBooleanTest)
+
 print("-------------------------------------------------------------------------")
