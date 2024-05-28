@@ -206,7 +206,7 @@ class Number(Value):
 
   def get_comparison_ne(self, other):
     if isinstance(other, Number):
-      return Number(int(self.value != other.value)).set_context(self.context), None
+      return Boolean(int(self.value != other.value)).set_context(self.context), None
     else:
       return None, Value.illegal_operation(self, other)
 
