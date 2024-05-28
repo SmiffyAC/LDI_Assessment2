@@ -1,6 +1,6 @@
 # Stage 5: Control Flow (60 - 80%)
 print("\n------------------ STAGE 5: CONTROL FLOW (60 - 80%) ---------------------")
-print("NESTED WHILE LOOP------------------------------")
+print("\nNESTED WHILE LOOP------------------------------")
 var i = 0
 
 var x = 0

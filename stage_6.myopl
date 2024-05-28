@@ -1,7 +1,7 @@
 # Stage 6: Additional Features (80%+)
 print("\n------------------ STAGE 6: ADDITIONAL FEATURES (80%+) ---------------------")
 
-print("\nLISTS FEATURE------------------------------------------")
+print("\nLISTS FEATURE (+10%) -----------------------------------")
 
 var list = [1,2,3]
 print("List:")
@@ -27,7 +27,7 @@ var selection = index(list, 0)
 print("Random selection/index:")
 print(selection)
 
-print("\nFUNCTIONS FEATURE---------------------------------------")
+print("\nFUNCTIONS FEATURE (+10%) -------------------------------")
 
 print("Function for adding numbers together (3 + 4):")
 fun add(a, b) -> a + b
@@ -40,4 +40,4 @@ var test = check([1,2,3], [1,2,3,4,5,6])
 print(test)
 
 
-print("-------------------------------------------------------------------------")
+print("----------------------------------------------------------------------------")

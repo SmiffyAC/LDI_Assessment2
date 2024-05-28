@@ -1,0 +1,183 @@
+# Stage 1: Basic Calculator (0 - 20%)
+print("\n----------------- STAGE 1 - BASIC CALCULATOR (0 - 20%) -----------------")
+
+# Adding
+print("\nADDING TEST")
+print(1 + 1)
+
+# Subtracting
+print("\nSUBTRACTING TEST")
+print(1 - 2)
+
+# Adding and Subtracting
+print("\nADDING AND SUBTRACTING TEST")
+print(2.5 + 2.5 - 1.25)
+
+# Multiplication
+print("\nMULTIPLICATION TEST")
+print(10 * 10)
+
+# Division - THIS IS FLOAT????
+print("\nDIVISION TEST")
+print(100 / 250)
+
+# Parenthesis
+print("\nPARENTHESIS TEST")
+print((100 - 50) * 3)
+print(100 - (50 * 3))
+
+# Negative Numbers
+print("\nNEGATIVE NUMBERS TEST")
+print(-5 - 7)
+print (-10 - -6)
+print("-------------------------------------------------------------------------")
+
+# Stage 2: Boolean Logic (20 - 40%)
+print("\n------------------ STAGE 2 - BOOLEAN LOGIC (20 - 40%) ------------------")
+
+# Binary Comparison for numbers
+print("\nBINARY COMPARISON FOR NUMBERS TEST")
+print(1 == 1)
+print(1 == 0)
+print(1 != 0)
+
+# Binary Comparison for Booleans
+print("\nBINARY COMPARISON FOR BOOLEANS TEST")
+print(True == True)
+print(True == False)
+print(True != False)
+
+# AND and OR
+print("\nAND OR TEST")
+print(True and True)
+print(False and False)
+print(True or True)
+print(False or True)
+
+# Unary Negation of Booleans
+print("\nUNARY NEGATION OF BOOLEANS TEST")
+print(not True)
+print(not False)
+print("-------------------------------------------------------------------------")
+
+# Stage 3: Text values (40 - 50%)
+print("\n------------------ STAGE 3: TEXT VALUES (40 - 50%) ---------------------")
+
+# Concatenation of text values
+print("CONCATENATION OF TEXT VALUES TEST")
+print("Hello" + " " + "World!")
+# Binary comparisons between text values
+print("BINARY COMPARISONS BETWEEN TEXT VALUES TEST")
+print("Hello World!" == "Hello World!")
+print("Hello World!" == "Hello")
+print("Hello World!" != "Hello World!")
+print("Hello World!" != "Hello")
+print("-------------------------------------------------------------------------")
+
+# Stage 4: Global Data (50 - 60%)
+print("\n------------------ STAGE 4: GLOBAL DATA (50 - 60%) ---------------------")
+
+var quickMaths = 10
+var quickMaths = quickMaths + 2
+print (quickMaths)
+
+var floatTest = 1.0
+var floatTest = floatTest + 5
+print (floatTest)
+
+var stringCatTest = "10 corgis"
+var stringCatTest = stringCatTest + " 5" + " more corgis"
+print (stringCatTest)
+
+print("-------------------------------------------------------------------------")
+
+# Stage 5: Control Flow (60 - 80%)
+print("\n------------------ STAGE 5: CONTROL FLOW (60 - 80%) ---------------------")
+print("\nNESTED WHILE LOOP------------------------------")
+var i = 0
+
+var x = 0
+
+while i < 6 :
+
+	print("First While Loop")
+
+	while x < 3 :
+		print ("Second While Loop")
+		var x = x + 1
+	end
+
+	var i = i + 1
+
+end
+
+print("\nNESTED IF-THEN-ELSE STATEMENTS-----------------")
+
+var a = 0
+var b = "orange"
+
+if a == 0:
+	if b == "blue":
+		var c = 100
+	elif b == "green":
+		var c = 200
+	else
+		var c = 300
+		end
+
+elif a == 78:
+	var c = 400
+
+else
+	var c = 500
+
+end
+
+print(c)
+
+
+print("-------------------------------------------------------------------------")
+
+# Stage 6: Additional Features (80%+)
+print("\n------------------ STAGE 6: ADDITIONAL FEATURES (80%+) ---------------------")
+
+print("\nLISTS FEATURE (+10%) -----------------------------------")
+
+var list = [1,2,3]
+print("List:")
+print(list)
+
+var length = len(list)
+print("List length:")
+print(length)
+
+append(list, 4)
+print("Appending to List:")
+print(list)
+
+var lengthTwo = len(list)
+print("New list length after append:")
+print(lengthTwo)
+
+pop(list, 3)
+print("Popping from List:")
+print(list)
+
+var selection = index(list, 0)
+print("Random selection/index:")
+print(selection)
+
+print("\nFUNCTIONS FEATURE (+10%) -------------------------------")
+
+print("Function for adding numbers together (3 + 4):")
+fun add(a, b) -> a + b
+var sum = add(3, 4)
+print(sum)
+
+print("Function for checking if two lists have the same length:")
+fun check(string1, string2) -> len(string1) == len(string2) 
+var test = check([1,2,3], [1,2,3,4,5,6])
+print(test)
+
+
+print("----------------------------------------------------------------------------")
