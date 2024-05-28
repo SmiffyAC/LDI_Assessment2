@@ -1,5 +1,3 @@
-# errors.py
-
 from string_with_arrows import string_with_arrows
 
 #######################################

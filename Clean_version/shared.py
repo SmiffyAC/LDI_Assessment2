@@ -1,4 +1,3 @@
-# shared.py
 import string
 
 from string_with_arrows import *

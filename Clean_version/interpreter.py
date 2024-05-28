@@ -1,6 +1,3 @@
-# interpreter.py
-
-# from values import *
 from values import Number, String, List, Boolean
 from lexer import *
 from errors import RTError

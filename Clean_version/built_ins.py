@@ -1,5 +1,3 @@
-# builtins.py
-
 import os
 from values import *
 from errors import RTError

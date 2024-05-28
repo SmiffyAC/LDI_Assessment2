@@ -1,5 +1,3 @@
-# values.py
-
 from errors import RTError
 from shared import RTResult
 from symbol_table import SymbolTable, Context
