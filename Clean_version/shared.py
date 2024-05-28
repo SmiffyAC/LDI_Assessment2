@@ -2,17 +2,15 @@ import string
 
 from string_with_arrows import *
 
-#######################################
+
 # CONSTANTS
-#######################################
 
 DIGITS = '0123456789'
 LETTERS = string.ascii_letters
 LETTERS_DIGITS = LETTERS + DIGITS
 
-#######################################
+
 # POSITION
-#######################################
 
 class Position:
   def __init__(self, idx, ln, col, fn, ftxt):
@@ -36,9 +34,8 @@ class Position:
     return Position(self.idx, self.ln, self.col, self.fn, self.ftxt)
 
 
-#######################################
+
 # RUNTIME RESULT
-#######################################
 
 class RTResult:
   def __init__(self):
@@ -84,7 +81,6 @@ class RTResult:
     return self
 
   def should_return(self):
-    # Note: this will allow you to continue and break outside the current function
     return (
       self.error or
       self.func_return_value or

@@ -4,9 +4,7 @@ from errors import RTError
 from shared import RTResult
 from symbol_table import SymbolTable, Context
 
-#######################################
 # Built-in Functions
-#######################################
 
 class BaseFunction(Value):
   def __init__(self, name):
@@ -111,7 +109,6 @@ class BuiltInFunction(BaseFunction):
   def __repr__(self):
     return f"<built-in function {self.name}>"
 
-  #####################################
 
   def execute_print(self, exec_ctx):
     print(str(exec_ctx.symbol_table.get('value')))

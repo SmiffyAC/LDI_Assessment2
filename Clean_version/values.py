@@ -2,9 +2,8 @@ from errors import RTError
 from shared import RTResult
 from symbol_table import SymbolTable, Context
 
-#######################################
+
 # VALUES
-#######################################
 
 class Value:
   def __init__(self):
@@ -98,12 +97,6 @@ class Boolean(Value):
 
     def is_true(self):
         return self.value
-    
-    # def added_to(self, other):
-    #     if isinstance(other, Boolean):
-    #         return Number(int(self.value) + int(other.value)).set_context(self.context), None
-    #     else:
-    #         return None, self.illegal_operation(other)
         
     def added_to(self, other):
         if isinstance(other, Boolean):
@@ -140,7 +133,6 @@ class Boolean(Value):
 
 class Number(Value):
 
-  # What does this do?
   # Holds the data for a numerio variable or constant.
   # Handles addition, subtraction, multiplication, division, and exponentiation.
   # Also handles comparisons.
@@ -188,12 +180,6 @@ class Number(Value):
       return Number(self.value ** other.value).set_context(self.context), None
     else:
       return None, Value.illegal_operation(self, other)
-
-  # def get_comparison_eq(self, other):
-  #   if isinstance(other, Number):
-  #     return Number(int(self.value == other.value)).set_context(self.context), None
-  #   else:
-  #     return None, Value.illegal_operation(self, other)
     
   def get_comparison_eq(self, other):
     if isinstance(other, Number):
@@ -231,34 +217,18 @@ class Number(Value):
       return Number(int(self.value >= other.value)).set_context(self.context), None
     else:
       return None, Value.illegal_operation(self, other)
-
-  # def anded_by(self, other):
-  #   if isinstance(other, Number):
-  #     return Number(int(self.value and other.value)).set_context(self.context), None
-  #   else:
-  #     return None, Value.illegal_operation(self, other)
     
   def anded_by(self, other):
     if isinstance(other, Number):
         return Boolean(bool(self.value) and bool(other.value)).set_context(self.context), None
     else:
         return None, Value.illegal_operation(self, other)
-
-
-  # def ored_by(self, other):
-  #   if isinstance(other, Number):
-  #     return Number(int(self.value or other.value)).set_context(self.context), None
-  #   else:
-  #     return None, Value.illegal_operation(self, other)
     
   def ored_by(self, other):
     if isinstance(other, Number):
         return Boolean(bool(self.value) or bool(other.value)).set_context(self.context), None
     else:
         return None, Value.illegal_operation(self, other)
-
-  # def notted(self):
-  #   return Number(1 if self.value == 0 else 0).set_context(self.context), None
     
   def notted(self):
     return Boolean(not bool(self.value)).set_context(self.context), None

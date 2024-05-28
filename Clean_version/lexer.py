@@ -1,9 +1,8 @@
 from shared import Position, DIGITS, LETTERS, LETTERS_DIGITS
 from errors import Error, IllegalCharError, ExpectedCharError
 
-#######################################
+
 # TOKENS
-#######################################
 
 TT_INT				= 'INT'
 TT_FLOAT    	= 'FLOAT'
@@ -69,9 +68,8 @@ class Token:
     if self.value: return f'{self.type}:{self.value}'
     return f'{self.type}'
 
-#######################################
+
 # LEXER
-#######################################
 
 # Takes raw input text and converts it to a list of tokens
 # Each token is a small object containing the token type and value

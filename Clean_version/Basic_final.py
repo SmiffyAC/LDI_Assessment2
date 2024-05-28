@@ -1,6 +1,4 @@
-#######################################
 # IMPORTS
-#######################################
 
 from string_with_arrows import *
 from lexer import Lexer
@@ -16,14 +14,11 @@ import string
 import os
 import math
 
-#######################################
+
 # RUN
-#######################################
 
 global_symbol_table = SymbolTable()
 global_symbol_table.set("null", Number.null)
-# global_symbol_table.set("False", Number.false)
-# global_symbol_table.set("True", Number.true)
 global_symbol_table.set("False", Boolean(False))
 global_symbol_table.set("True", Boolean(True))
 global_symbol_table.set("print", BuiltInFunction.print)

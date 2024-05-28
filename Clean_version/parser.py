@@ -2,9 +2,8 @@ from shared import *
 from lexer import *
 from errors import InvalidSyntaxError
 
-#######################################
+
 # NODES
-#######################################
 
 # The Parser constructs the AST by creating nodes for each construct in the language
 # Each node is a small object representing a specific construct such as a binary operation,
@@ -151,9 +150,8 @@ class BreakNode:
     self.pos_start = pos_start
     self.pos_end = pos_end
 
-#######################################
+
 # PARSE RESULT
-#######################################
 
 class ParseResult:
   def __init__(self):
@@ -188,9 +186,8 @@ class ParseResult:
       self.error = error
     return self
   
-#######################################
+
 # PARSER
-#######################################
 
 # Takes a list of tokens and constructs an Abstract Syntax Tree (AST)
 # Each node in the AST represents a construct in the language such as

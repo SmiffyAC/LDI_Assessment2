@@ -59,9 +59,8 @@ class Function():
   def __repr__(self):
     return f"<function {self.name}>"
   
-#######################################
+
 # INTERPRETER
-#######################################
 
 class Interpreter:
   def visit(self, node, context):
@@ -71,8 +70,6 @@ class Interpreter:
 
   def no_visit_method(self, node, context):
     raise Exception(f'No visit_{type(node).__name__} method defined')
-
-  ###################################
 
   def visit_NumberNode(self, node, context):
     return RTResult().success(

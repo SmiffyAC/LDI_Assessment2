@@ -1,6 +1,4 @@
-#######################################
 # CONTEXT
-#######################################
 
 class Context:
   def __init__(self, display_name, parent=None, parent_entry_pos=None):
@@ -9,9 +7,8 @@ class Context:
     self.parent_entry_pos = parent_entry_pos
     self.symbol_table = None
 
-#######################################
+
 # SYMBOL TABLE
-#######################################
 
 class SymbolTable:
   def __init__(self, parent=None):
