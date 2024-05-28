@@ -4,41 +4,48 @@ from string_with_arrows import string_with_arrows
 
 class Error:
   def __init__(self, pos_start, pos_end, error_name, details):
-    self.pos_start = pos_start
-    self.pos_end = pos_end
-    self.error_name = error_name
-    self.details = details
+    self.pos_start = pos_start # Start position of the error
+    self.pos_end = pos_end    # End position of the error
+    self.error_name = error_name # Name of the error
+    self.details = details # Details of the error
   
   def as_string(self):
+    # Returns a string representation of the error with file and line information
     result  = f'{self.error_name}: {self.details}\n'
     result += f'File {self.pos_start.fn}, line {self.pos_start.ln + 1}'
     result += '\n\n' + string_with_arrows(self.pos_start.ftxt, self.pos_start, self.pos_end)
     return result
 
+# Error for illegal characters in the input
 class IllegalCharError(Error):
   def __init__(self, pos_start, pos_end, details):
     super().__init__(pos_start, pos_end, 'Illegal Character', details)
 
+# Error for expected characters that are not found
 class ExpectedCharError(Error):
   def __init__(self, pos_start, pos_end, details):
     super().__init__(pos_start, pos_end, 'Expected Character', details)
 
+# Error for invalid syntax in the input
 class InvalidSyntaxError(Error):
   def __init__(self, pos_start, pos_end, details=''):
     super().__init__(pos_start, pos_end, 'Invalid Syntax', details)
 
+# Runtime error class for errors that occur during execution
 class RTError(Error):
   def __init__(self, pos_start, pos_end, details, context):
     super().__init__(pos_start, pos_end, 'Runtime Error', details)
     self.context = context
 
   def as_string(self):
+    # Returns a string representation of the runtime error with traceback information
     result  = self.generate_traceback()
     result += f'{self.error_name}: {self.details}'
     result += '\n\n' + string_with_arrows(self.pos_start.ftxt, self.pos_start, self.pos_end)
     return result
 
   def generate_traceback(self):
+    # Generates a traceback string showing the sequence of calls that led to the error
     result = ''
     pos = self.pos_start
     ctx = self.context

@@ -2,32 +2,32 @@
 print("\n----------------- STAGE 1 - BASIC CALCULATOR (0 - 20%) -----------------")
 
 # Adding
-print("\nADDING TEST")
+print("\nADDING TEST:")
 print(1 + 1)
 
 # Subtracting
-print("\nSUBTRACTING TEST")
+print("\nSUBTRACTING TEST:")
 print(1 - 2)
 
 # Adding and Subtracting
-print("\nADDING AND SUBTRACTING TEST")
+print("\nADDING AND SUBTRACTING TEST:")
 print(2.5 + 2.5 - 1.25)
 
 # Multiplication
-print("\nMULTIPLICATION TEST")
+print("\nMULTIPLICATION TEST:")
 print(10 * 10)
 
-# Division - THIS IS FLOAT????
-print("\nDIVISION TEST")
+# Division
+print("\nDIVISION TEST:")
 print(100 / 250)
 
 # Parenthesis
-print("\nPARENTHESIS TEST")
+print("\nPARENTHESIS TEST:")
 print((100 - 50) * 3)
 print(100 - (50 * 3))
 
 # Negative Numbers
-print("\nNEGATIVE NUMBERS TEST")
+print("\nNEGATIVE NUMBERS TEST:")
 print(-5 - 7)
 print (-10 - -6)
 print("-------------------------------------------------------------------------")

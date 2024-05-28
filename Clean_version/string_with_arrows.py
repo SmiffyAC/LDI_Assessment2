@@ -1,3 +1,6 @@
+# Used to highlight the section of code that has caused an error
+# Called when an error is raised in the lexer, parser, or interpreter
+
 def string_with_arrows(text, pos_start, pos_end):
     result = ''
 

@@ -2,19 +2,19 @@
 print("\n------------------ STAGE 2 - BOOLEAN LOGIC (20 - 40%) ------------------")
 
 # Binary Comparison for numbers
-print("\nBINARY COMPARISON FOR NUMBERS TEST")
+print("\nBINARY COMPARISON FOR NUMBERS TEST:")
 print(1 == 1)
 print(1 == 0)
 print(1 != 0)
 
 # Binary Comparison for Booleans
-print("\nBINARY COMPARISON FOR BOOLEANS TEST")
+print("\nBINARY COMPARISON FOR BOOLEANS TEST:")
 print(True == True)
 print(True == False)
 print(True != False)
 
 # AND and OR
-print("\nAND OR TEST")
+print("\nAND OR TEST:")
 print(True and True)
 print(False and False)
 print(True + True)
@@ -23,7 +23,7 @@ print(True or True)
 print(False or True)
 
 # Unary Negation of Booleans
-print("\nUNARY NEGATION OF BOOLEANS TEST")
+print("\nUNARY NEGATION OF BOOLEANS TEST:")
 print(not True)
 print(not False)
 print("-------------------------------------------------------------------------")

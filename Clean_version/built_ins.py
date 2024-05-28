@@ -79,6 +79,7 @@ class Function(BaseFunction):
   def __repr__(self):
     return f"<function {self.name}>"
 
+# Class for built-in functions
 class BuiltInFunction(BaseFunction):
   def __init__(self, name):
     super().__init__(name)
@@ -289,6 +290,7 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(Number.null)
   execute_run.arg_names = ["fn"]
 
+# Instantiation of all built-in functions
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")

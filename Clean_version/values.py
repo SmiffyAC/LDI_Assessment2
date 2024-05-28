@@ -5,6 +5,7 @@ from symbol_table import SymbolTable, Context
 
 # VALUES
 
+# Base class for all values
 class Value:
   def __init__(self):
     self.set_pos()
@@ -19,6 +20,7 @@ class Value:
     self.context = context
     return self
 
+  # Methods for arithmetic operations, to be overridden by subclasses
   def added_to(self, other):
     return None, self.illegal_operation(other)
 
@@ -34,6 +36,7 @@ class Value:
   def powed_by(self, other):
     return None, self.illegal_operation(other)
 
+  # Methods for comparison operations
   def get_comparison_eq(self, other):
     return None, self.illegal_operation(other)
 
@@ -52,6 +55,7 @@ class Value:
   def get_comparison_gte(self, other):
     return None, self.illegal_operation(other)
 
+  # Methods for logical operations
   def anded_by(self, other):
     return None, self.illegal_operation(other)
 
@@ -70,6 +74,7 @@ class Value:
   def is_true(self):
     return False
 
+  # Method to handle illegal operations
   def illegal_operation(self, other=None):
     if not other: other = self
     return RTError(
@@ -77,7 +82,8 @@ class Value:
       'Illegal operation',
       self.context
     )
-  
+
+# Boolean value class
 class Boolean(Value):
     def __init__(self, value):
         super().__init__()
@@ -97,7 +103,8 @@ class Boolean(Value):
 
     def is_true(self):
         return self.value
-        
+    
+    # Boolean-specific operations
     def added_to(self, other):
         if isinstance(other, Boolean):
             return Boolean(self.value or other.value).set_context(self.context), None
@@ -131,6 +138,7 @@ class Boolean(Value):
       else:
         return None, Value.illegal_operation(self, other)
 
+# Number value class
 class Number(Value):
 
   # Holds the data for a numerio variable or constant.
@@ -248,15 +256,18 @@ class Number(Value):
   def __repr__(self):
     return str(self.value)
 
+# Predefined values for null, false, and true
 Number.null = Number(0)
 Number.false = Number(0)
 Number.true = Number(1)
 
+# String value class
 class String(Value):
   def __init__(self, value):
     super().__init__()
     self.value = value
 
+  # String-specific operations
   def get_comparison_eq(self, other):
     if isinstance(other, String):
         return Boolean(self.value == other.value).set_context(self.context), None

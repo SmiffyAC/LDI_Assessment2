@@ -4,6 +4,7 @@ from errors import RTError
 from symbol_table import SymbolTable, Context
 from shared import RTResult
 
+# Represents a user-defined function
 class Function():
   def __init__(self, name, body_node, arg_names):
     super().__init__()
@@ -20,12 +21,14 @@ class Function():
     self.context = context
     return self
 
+  # Executes the function with the provided arguments
   def execute(self, args):
     res = RTResult()
     interpreter = Interpreter()
     new_context = Context(self.name, self.context, self.pos_start)
     new_context.symbol_table = SymbolTable(new_context.parent.symbol_table)
 
+    # Check for too many or too few arguments
     if len(args) > len(self.arg_names):
       return res.failure(RTError(
         self.pos_start, self.pos_end,
@@ -46,6 +49,7 @@ class Function():
       arg_value.set_context(new_context)
       new_context.symbol_table.set(arg_name, arg_value)
 
+    # Execute the function body
     value = res.register(interpreter.visit(self.body_node, new_context))
     if res.error: return res
     return res.success(value)
@@ -63,6 +67,7 @@ class Function():
 # INTERPRETER
 
 class Interpreter:
+  # Visit method to process different types of nodes
   def visit(self, node, context):
     method_name = f'visit_{type(node).__name__}'
     method = getattr(self, method_name, self.no_visit_method)
@@ -220,6 +225,7 @@ class Interpreter:
       List(elements).set_context(context).set_pos(node.pos_start, node.pos_end)
     )
 
+  # Visit FuncDefNode and define the function
   def visit_FuncDefNode(self, node, context):
     res = RTResult()
 
@@ -233,6 +239,7 @@ class Interpreter:
 
     return res.success(func_value)
 
+  # Visit CallNode and execute the function call
   def visit_CallNode(self, node, context):
     res = RTResult()
     args = []

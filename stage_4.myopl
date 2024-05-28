@@ -1,18 +1,23 @@
 # Stage 4: Global Data (50 - 60%)
 print("\n------------------ STAGE 4: GLOBAL DATA (50 - 60%) ---------------------")
 
+print("\nCREATION, READING AND DISPLAY OF VARIABLES:")
+print("\nINTS:")
 var quickMaths = 10
 var quickMaths = quickMaths + 2
 print (quickMaths)
 
+print("\nFLOATS:")
 var floatTest = 1.0
 var floatTest = floatTest + 5
 print (floatTest)
 
+print("\nSTRINGS:")
 var stringCatTest = "10 corgis"
 var stringCatTest = stringCatTest + " 5" + " more corgis"
 print (stringCatTest)
 
+print("\nBOOLEAN:")
 var booleanTest = True
 var notBooleanTest = not booleanTest
 print(notBooleanTest)
