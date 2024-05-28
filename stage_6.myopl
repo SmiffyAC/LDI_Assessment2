@@ -1,6 +1,8 @@
 # Stage 6: Additional Features (80%+)
 print("\n------------------ STAGE 6: ADDITIONAL FEATURES (80%+) ---------------------")
 
+print("LISTS FEATURE----------------------------------")
+
 var list = [1,2,3]
 print("List:")
 print(list)
@@ -22,7 +24,15 @@ print("Popping from List:")
 print(list)
 
 var selection = index(list, 0)
-print("Random selection:")
+print("Random selection/index:")
 print(selection)
+
+print("FUNCTIONS FEATURE------------------------------")
+
+fun add(a, b) -> a + b
+
+var sum = add(3, 4)
+print(sum)
+
 
 print("-------------------------------------------------------------------------")
