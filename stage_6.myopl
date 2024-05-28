@@ -1,3 +1,28 @@
 # Stage 6: Additional Features (80%+)
 print("\n------------------ STAGE 6: ADDITIONAL FEATURES (80%+) ---------------------")
+
+var list = [1,2,3]
+print("List:")
+print(list)
+
+var length = len(list)
+print("List length:")
+print(length)
+
+append(list, 4)
+print("Appending to List:")
+print(list)
+
+var lengthTwo = len(list)
+print("New list length after append:")
+print(lengthTwo)
+
+pop(list, 3)
+print("Popping from List:")
+print(list)
+
+var selection = index(list, 0)
+print("Random selection:")
+print(selection)
+
 print("-------------------------------------------------------------------------")

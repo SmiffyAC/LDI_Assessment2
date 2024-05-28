@@ -1,6 +1,6 @@
 # Stage 5: Control Flow (60 - 80%)
 print("\n------------------ STAGE 5: CONTROL FLOW (60 - 80%) ---------------------")
-print("WHILE LOOP------------------------------")
+print("NESTED WHILE LOOP------------------------------")
 var i = 0
 
 var x = 0
@@ -17,4 +17,30 @@ while i < 6 :
 	var i = i + 1
 
 end
+
+print("\nNESTED IF-THEN-ELSE STATEMENTS-----------------")
+
+var a = 0
+var b = "orange"
+
+if a == 0:
+	if b == "blue":
+		var c = 100
+	elif b == "green":
+		var c = 200
+	else
+		var c = 300
+		end
+
+elif a == 78:
+	var c = 400
+
+else
+	var c = 500
+
+end
+
+print(c)
+
+
 print("-------------------------------------------------------------------------")

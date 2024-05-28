@@ -229,6 +229,35 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(Number(len(list_.elements)))
   execute_len.arg_names = ["list"]
 
+  def execute_index(self, exec_ctx):
+    list_ = exec_ctx.symbol_table.get("list")
+    index = exec_ctx.symbol_table.get("index")
+
+    if not isinstance(list_, List):
+      return RTResult().failure(RTError(
+        self.pos_start, self.pos_end,
+        "First argument must be list",
+        exec_ctx
+      ))
+
+    if not isinstance(index, Number):
+      return RTResult().failure(RTError(
+        self.pos_start, self.pos_end,
+        "Second argument must be number",
+        exec_ctx
+      ))
+
+    try:
+      element = list_.elements[index.value]
+    except IndexError:
+      return RTResult().failure(RTError(
+        self.pos_start, self.pos_end,
+        'Element at this index could not be retrieved from list because index is out of bounds',
+        exec_ctx
+      ))
+    return RTResult().success(element)
+  execute_index.arg_names = ["list", "index"]
+
   def execute_run(self, exec_ctx):
     from Basic_final import run
     fn = exec_ctx.symbol_table.get("fn")
@@ -275,4 +304,5 @@ BuiltInFunction.append      = BuiltInFunction("append")
 BuiltInFunction.pop         = BuiltInFunction("pop")
 BuiltInFunction.extend      = BuiltInFunction("extend")
 BuiltInFunction.len			    = BuiltInFunction("len")
+BuiltInFunction.index       = BuiltInFunction("index")
 BuiltInFunction.run			    = BuiltInFunction("run")
